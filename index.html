@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>软件小编 · 分享好用的软件和网站</title>
+<meta name="description" content="软件小编 —— 分享好用的软件和网站，也分享生活~">
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<style>
+/* ===================== 设计令牌（苹果风） ===================== */
+:root{
+  --bg:#f5f5f7;
+  --card-bg:#ffffff;
+  --card-border:transparent;
+  --card-shadow:0 4px 16px rgba(0,0,0,.05),0 1px 3px rgba(0,0,0,.04);
+  --card-shadow-hover:0 16px 44px rgba(0,0,0,.12),0 4px 10px rgba(0,0,0,.05);
+  --ink:#1d1d1f;
+  --ink-dim:#6e6e73;
+  --ink-faint:#86868b;
+  --line:rgba(29,29,31,.08);
+  --line-strong:rgba(29,29,31,.16);
+  --accent:#0071e3;
+  --accent-ink:#ffffff;
+  --ok:#34c759;
+  --ok-bg:rgba(52,199,89,.12);
+  --muted:#8e8e93;
+  --muted-bg:rgba(142,142,147,.14);
+  --warm:#ff9500;
+  --warm-bg:rgba(255,149,0,.14);
+  --radius:18px;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
+  --title-weight:600;
+}
+
+/* ===================== 基础 ===================== */
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--font);
+  font-weight:400;
+  color:var(--ink);
+  background:var(--bg);
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+/* 顶部环境光晕，营造通透质感 */
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(960px 440px at 50% -10%,rgba(0,113,227,.06),transparent 60%),
+    radial-gradient(720px 360px at 88% 10%,rgba(52,199,89,.035),transparent 62%);
+}
+a{color:inherit;}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+svg{display:block;}
+::selection{background:var(--accent);color:var(--accent-ink);}
+/* 细腻滚动条 */
+::-webkit-scrollbar{width:10px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(29,29,31,.16);border-radius:999px;border:3px solid var(--bg);}
+::-webkit-scrollbar-thumb:hover{background:rgba(29,29,31,.3);}
+html{scrollbar-width:thin;scrollbar-color:rgba(29,29,31,.22) transparent;}
+
+.wrap{
+  max-width:1080px;margin-inline:auto;
+  padding-inline:clamp(18px,4.5vw,40px);
+}
+
+/* 入场 / 滚动揭示 */
+@keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+.hero > *{animation:rise .7s cubic-bezier(.22,.61,.36,1) both;}
+.hero > *:nth-child(1){animation-delay:.05s;}
+.hero > *:nth-child(2){animation-delay:.13s;}
+.hero > *:nth-child(3){animation-delay:.21s;}
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.in{opacity:1;transform:none;}
+
+/* ===================== Hero ===================== */
+.hero{
+  text-align:center;
+  padding:clamp(44px,7.5vh,68px) 0 clamp(26px,5vh,40px);
+}
+.hero h1{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  font-size:clamp(1.4rem,3.4vw,2rem);
+  font-weight:700;letter-spacing:-.01em;line-height:1.35;
+  margin:18px 0 10px;
+}
+/* 标题前的指南针图标：与 favicon 同源，高度与文字一致，悬停旋转一圈 */
+.logo-spin{
+  flex:none;width:1.2em;height:1.2em;
+  transform-origin:center;
+  transition:transform .8s cubic-bezier(.21,.47,.32,.98);
+}
+.logo-spin:hover{transform:rotate(360deg);}
+.hero .sub{font-size:.92rem;color:var(--ink-dim);line-height:1.8;}
+
+/* ===================== 联系方式（旧站风格：白底毛玻璃胶囊 + 同色线条图标） ===================== */
+.socials{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:24px;}
+.social{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 15px;border-radius:999px;
+  background:rgba(255,255,255,.72);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  border:1px solid rgba(29,29,31,.1);
+  font-size:.78rem;letter-spacing:.04em;color:var(--ink-dim);
+  text-decoration:none;
+  transition:transform .4s cubic-bezier(.25,.46,.45,.94),background-color .3s ease,box-shadow .4s ease,color .3s ease;
+}
+.social:hover{background:#fff;transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.1);color:var(--ink);}
+/* 图标为 FontAwesome 官方字形，与文字同色（非彩色块） */
+.si{flex:none;width:15px;height:15px;fill:currentColor;display:block;}
+/* 知乎字形为 640×512 宽版，按比例放宽避免裁切 */
+.si-zh{width:18.75px;}
+.si-576{width:16.9px;}
+
+/* ===================== 项目区块 ===================== */
+.section{padding:clamp(26px,4.5vh,42px) 0;}
+.section-head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:16px;
+  margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--line);
+}
+.kicker{
+  display:flex;align-items:center;gap:8px;
+  font-size:.64rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--ink-faint);margin-bottom:6px;
+}
+.kicker::before{content:"";width:16px;height:1px;background:var(--accent);opacity:.75;}
+.section-head h2{font-size:clamp(1.2rem,2.2vw,1.5rem);font-weight:var(--title-weight);letter-spacing:.02em;}
+.section-head .note{font-size:.72rem;letter-spacing:.14em;color:var(--ink-faint);white-space:nowrap;}
+
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,270px),1fr));gap:16px;}
+
+.card{
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:var(--radius);
+  box-shadow:var(--card-shadow),inset 0 1px 0 rgba(255,255,255,.85);
+  padding:18px 18px 14px;
+  text-decoration:none;color:var(--ink);
+  transition:transform .4s cubic-bezier(.25,.46,.45,.94),box-shadow .4s ease,border-color .3s ease;
+}
+.card::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:0;
+  background:radial-gradient(130% 90% at 18% 0%,rgba(0,113,227,.055),transparent 55%);
+  transition:opacity .4s ease;
+}
+.card:hover{border-color:rgba(0,113,227,.28);transform:translateY(-2px);box-shadow:var(--card-shadow-hover),inset 0 1px 0 rgba(255,255,255,.85);}
+.card:hover::after{opacity:1;}
+.card:active{transform:translateY(0) scale(.985);}
+/* 卡片入场（只动透明度，避免与悬停位移冲突） */
+.fade{opacity:0;transition:opacity .6s ease;}
+.fade.in{opacity:1;}
+.card-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
+.card-year{font-size:.72rem;letter-spacing:.08em;color:var(--ink-faint);white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis;}
+.card-title{
+  display:flex;align-items:center;gap:8px;
+  font-size:1.05rem;font-weight:var(--title-weight);letter-spacing:.01em;margin-bottom:4px;
+}
+.ci{width:16px;height:16px;flex:none;color:var(--ink-faint);transition:color .3s ease;}
+.card:hover .ci{color:var(--accent);}
+.card-desc{font-size:.82rem;color:var(--ink-dim);line-height:1.6;flex:1;}
+.card-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-top:14px;padding-top:11px;border-top:1px solid var(--line);
+}
+.card-domain{font-size:.72rem;letter-spacing:.04em;color:var(--ink-faint);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;}
+.card-arrow{
+  flex:none;width:26px;height:26px;border-radius:50%;
+  border:1px solid var(--line-strong);
+  display:grid;place-items:center;color:var(--ink-dim);
+  transition:background-color .3s ease,border-color .3s ease,color .3s ease,transform .4s cubic-bezier(.25,.46,.45,.94);
+}
+.card-arrow svg{width:12px;height:12px;}
+.card:hover .card-arrow{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);transform:translateX(2px);}
+
+/* 状态标记 */
+.chip{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.68rem;letter-spacing:.08em;
+  padding:2px 9px;border-radius:999px;white-space:nowrap;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55);
+}
+.chip i{width:5px;height:5px;border-radius:50%;background:currentColor;}
+.chip.live{color:var(--ok);background:var(--ok-bg);}
+.chip.transfer{color:var(--muted);background:var(--muted-bg);}
+.chip.off{color:var(--warm);background:var(--warm-bg);}
+
+/* ===================== 页脚 ===================== */
+.site-footer{border-top:1px solid var(--line);margin-top:clamp(30px,5vh,44px);padding:22px 0 32px;}
+.foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.72rem;letter-spacing:.12em;color:var(--ink-faint);}
+.foot-side{display:flex;align-items:center;gap:18px;}
+.to-top{font-size:.72rem;letter-spacing:.14em;color:var(--ink-faint);text-decoration:none;transition:color .2s ease;white-space:nowrap;}
+.to-top:hover{color:var(--accent);}
+
+/* ===================== 公众号二维码弹窗 ===================== */
+.modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:20px;}
+.modal[hidden]{display:none;}
+.modal-mask{position:absolute;inset:0;background:rgba(29,29,31,.4);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);}
+.modal-card{
+  position:relative;z-index:1;width:min(320px,100%);
+  background:var(--card-bg);border:1px solid var(--line-strong);
+  border-radius:var(--radius);box-shadow:0 24px 60px rgba(0,0,0,.18);
+  padding:26px 24px 24px;text-align:center;
+  animation:rise .35s cubic-bezier(.22,.61,.36,1) both;
+}
+.modal-close{
+  position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;
+  border:1px solid var(--line);background:transparent;color:var(--ink-dim);
+  display:grid;place-items:center;cursor:pointer;
+  transition:color .2s ease,border-color .2s ease;
+}
+.modal-close:hover{color:var(--accent);border-color:var(--accent);}
+.modal-close svg{width:13px;height:13px;}
+.modal-title{font-size:1rem;font-weight:600;letter-spacing:.06em;margin-bottom:16px;}
+.modal-img{width:200px;height:200px;border-radius:8px;display:block;margin:0 auto;}
+.modal-tip{margin-top:12px;font-size:.76rem;color:var(--ink-dim);letter-spacing:.04em;}
+
+/* ===================== 响应式 ===================== */
+@media (max-width:640px){
+  .card-grid{gap:12px;}
+  .section-head{align-items:flex-start;flex-direction:column;gap:4px;}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;}
+  .reveal,.fade{opacity:1;transform:none;}
+  html{scroll-behavior:auto;}
+}
+</style>
+</head>
+<body>
+
+<main id="top">
+
+  <!-- ===================== Hero ===================== -->
+  <section class="hero">
+    <h1><img class="logo-spin" src="favicon.ico" alt="软件小编" decoding="async">软件小编</h1>
+    <p class="sub">分享好用的软件和网站，也分享生活~</p>
+
+    <div class="socials" aria-label="联系方式">
+      <a class="social" href="https://weibo.com/u/5039005848" target="_blank" rel="noopener"><svg class="si" viewBox="0 0 512 512" aria-hidden="true"><path d="M407 177.6c7.6-24-13.4-46.8-37.4-41.7-22 4.8-28.8-28.1-7.1-32.8 50.1-10.9 92.3 37.1 76.5 84.8-6.8 21.2-38.8 10.8-32-10.3zM214.8 446.7C108.5 446.7 0 395.3 0 310.4c0-44.3 28-95.4 76.3-143.7C176 67 279.5 65.8 249.9 161c-4 13.1 12.3 5.7 12.3 6 79.5-33.6 140.5-16.8 114 51.4-3.7 9.4 1.1 10.9 8.3 13.1 135.7 42.3 34.8 215.2-169.7 215.2zm143.7-146.3c-5.4-55.7-78.5-94-163.4-85.7-84.8 8.6-148.8 60.3-143.4 116s78.5 94 163.4 85.7c84.8-8.6 148.8-60.3 143.4-116zM347.9 35.1c-25.9 5.6-16.8 43.7 8.3 38.3 72.3-15.2 134.8 52.8 111.7 124-7.4 24.2 29.1 37 37.4 12 31.9-99.8-55.1-195.9-157.4-174.3zm-78.5 311c-17.1 38.8-66.8 60-109.1 46.3-40.8-13.1-58-53.4-40.3-89.7 17.7-35.4 63.1-55.4 103.4-45.1 42 10.8 63.1 50.2 46 88.5zm-86.3-30c-12.9-5.4-30 .3-38 12.9-8.3 12.9-4.3 28 8.6 34 13.1 6 30.8.3 39.1-12.9 8-13.1 3.7-28.3-9.7-34zm32.6-13.4c-5.1-1.7-11.4.6-14.3 5.4-2.9 5.1-1.4 10.6 3.7 12.9 5.1 2 11.7-.3 14.6-5.4 2.8-5.2 1.1-10.9-4-12.9z"/></svg>微博</a>
+      <a class="social" href="https://www.zhihu.com/people/appts" target="_blank" rel="noopener"><svg class="si si-zh" viewBox="0 0 640 512" aria-hidden="true"><path d="M170.54 148.13v217.54l23.43.01 7.71 26.37 42.01-26.37h49.53V148.13H170.54zm97.75 193.93h-27.94l-27.9 17.51-5.08-17.47-11.9-.04V171.75h72.82v170.31zm-118.46-94.39H97.5c1.74-27.1 2.2-51.59 2.2-73.46h51.16s1.97-22.56-8.58-22.31h-88.5c3.49-13.12 7.87-26.66 13.12-40.67 0 0-24.07 0-32.27 21.57-3.39 8.9-13.21 43.14-30.7 78.12 5.89-.64 25.37-1.18 36.84-22.21 2.11-5.89 2.51-6.66 5.14-14.53h28.87c0 10.5-1.2 66.88-1.68 73.44H20.83c-11.74 0-15.56 23.62-15.56 23.62h65.58C66.45 321.1 42.83 363.12 0 396.34c20.49 5.85 40.91-.93 51-9.9 0 0 22.98-20.9 35.59-69.25l53.96 64.94s7.91-26.89-1.24-39.99c-7.58-8.92-28.06-33.06-36.79-41.81L87.9 311.95c4.36-13.98 6.99-27.55 7.87-40.67h61.65s-.09-23.62-7.59-23.62v.01zm412.02-1.6c20.83-25.64 44.98-58.57 44.98-58.57s-18.65-14.8-27.38-4.06c-6 8.15-36.83 48.2-36.83 48.2l19.23 14.43zm-150.09-59.09c-9.01-8.25-25.91 2.13-25.91 2.13s39.52 55.04 41.12 57.45l19.46-13.73s-25.67-37.61-34.66-45.86h-.01zM640 258.35c-19.78 0-130.91.93-131.06.93v-101c4.81 0 12.42-.4 22.85-1.2 40.88-2.41 70.13-4 87.77-4.81 0 0 12.22-27.19-.59-33.44-3.07-1.18-23.17 4.58-23.17 4.58s-165.22 16.49-232.36 18.05c1.6 8.82 7.62 17.08 15.78 19.55 13.31 3.48 22.69 1.7 49.15.89 24.83-1.6 43.68-2.43 56.51-2.43v99.81H351.41s2.82 22.31 25.51 22.85h107.94v70.92c0 13.97-11.19 21.99-24.48 21.12-14.08.11-26.08-1.15-41.69-1.81 1.99 3.97 6.33 14.39 19.31 21.84 9.88 4.81 16.17 6.57 26.02 6.57 29.56 0 45.67-17.28 44.89-45.31v-73.32h122.36c9.68 0 8.7-23.78 8.7-23.78l.03-.01z"/></svg>知乎</a>
+      <a class="social" href="#" id="wechatLink"><svg class="si si-576" viewBox="0 0 576 512" aria-hidden="true"><path d="M385.2 167.6c6.4 0 12.6.3 18.8 1.1C387.4 90.3 303.3 32 207.7 32 100.5 32 13 104.8 13 197.4c0 53.4 29.3 97.5 77.9 131.6l-19.3 58.6 68-34.1c24.4 4.8 43.8 9.7 68.2 9.7 6.2 0 12.1-.3 18.3-.8-4-12.9-6.2-26.6-6.2-40.8-.1-84.9 72.9-154 165.3-154zm-104.5-52.9c14.5 0 24.2 9.7 24.2 24.4 0 14.5-9.7 24.2-24.2 24.2-14.8 0-29.3-9.7-29.3-24.2.1-14.7 14.6-24.4 29.3-24.4zm-136.4 48.6c-14.5 0-29.3-9.7-29.3-24.2 0-14.8 14.8-24.4 29.3-24.4 14.8 0 24.4 9.7 24.4 24.4 0 14.6-9.6 24.2-24.4 24.2zM563 319.4c0-77.9-77.9-141.3-165.4-141.3-92.7 0-165.4 63.4-165.4 141.3S305 460.7 397.6 460.7c19.3 0 38.9-5.1 58.6-9.9l53.4 29.3-14.8-48.6C534 402.1 563 363.2 563 319.4zm-219.1-24.5c-9.7 0-19.3-9.7-19.3-19.6 0-9.7 9.7-19.3 19.3-19.3 14.8 0 24.4 9.7 24.4 19.3 0 10-9.7 19.6-24.4 19.6zm107.1 0c-9.7 0-19.3-9.7-19.3-19.6 0-9.7 9.7-19.3 19.3-19.3 14.5 0 24.4 9.7 24.4 19.3.1 10-9.9 19.6-24.4 19.6z"/></svg>公众号</a>
+      <a class="social" href="https://space.bilibili.com/141239213" target="_blank" rel="noopener"><svg class="si si-576" viewBox="0 0 576 512" aria-hidden="true"><path d="M488.6 104.1C505.3 122.2 513 143.8 511.9 169.8V372.2C511.5 398.6 502.7 420.3 485.4 437.3C468.2 454.3 446.3 463.2 419.9 464H92.02C65.57 463.2 43.81 454.2 26.74 436.8C9.682 419.4 .7667 396.5 0 368.2V169.8C.7667 143.8 9.682 122.2 26.74 104.1C43.81 87.75 65.57 78.77 92.02 78H121.4L96.05 52.19C90.3 46.46 87.42 39.19 87.42 30.4C87.42 21.6 90.3 14.34 96.05 8.603C101.8 2.868 109.1 0 117.9 0C126.7 0 134 2.868 139.8 8.603L213.1 78H301.1L375.6 8.603C381.7 2.868 389.2 0 398 0C406.8 0 414.1 2.868 419.9 8.603C425.6 14.34 428.5 21.6 428.5 30.4C428.5 39.19 425.6 46.46 419.9 52.19L394.6 78L423.9 78C450.3 78.77 471.9 87.75 488.6 104.1H488.6zM449.8 173.8C449.4 164.2 446.1 156.4 439.1 150.3C433.9 144.2 425.1 140.9 416.4 140.5H96.05C86.46 140.9 78.6 144.2 72.47 150.3C66.33 156.4 63.07 164.2 62.69 173.8V368.2C62.69 377.4 65.95 385.2 72.47 391.7C78.99 398.2 86.85 401.5 96.05 401.5H416.4C425.6 401.5 433.4 398.2 439.7 391.7C446 385.2 449.4 377.4 449.8 368.2L449.8 173.8zM185.5 216.5C191.8 222.8 195.2 230.6 195.6 239.7V273C195.2 282.2 191.9 289.9 185.8 296.2C179.6 302.5 171.8 305.7 162.2 305.7C152.6 305.7 144.7 302.5 138.6 296.2C132.5 289.9 129.2 282.2 128.8 273V239.7C129.2 230.6 132.6 222.8 138.9 216.5C145.2 210.2 152.1 206.9 162.2 206.5C171.4 206.9 179.2 210.2 185.5 216.5H185.5zM377 216.5C383.3 222.8 386.7 230.6 387.1 239.7V273C386.7 282.2 383.4 289.9 377.3 296.2C371.2 302.5 363.3 305.7 353.7 305.7C344.1 305.7 336.3 302.5 330.1 296.2C323.1 289.9 320.7 282.2 320.4 273V239.7C320.7 230.6 324.1 222.8 330.4 216.5C336.7 210.2 344.5 206.9 353.7 206.5C362.9 206.9 370.7 210.2 377 216.5H377z"/></svg>B站</a>
+      <a class="social" href="mailto:appexplore@foxmail.com"><svg class="si" viewBox="0 0 512 512" aria-hidden="true"><path d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"/></svg>邮箱</a>
+      <a class="social" href="https://qm.qq.com/cgi-bin/qm/qr?k=iHSBe1Ohz0bosc01sEPjy6GTK0PGwCyh&amp;jump_from=webapi&amp;authKey=32COGWuSsU9YG6hfPR0nSG6YUGJjCgeHJGEjydoJG/ApO6FIk9sq3/eB+Y+maL3n" target="_blank" rel="noopener"><svg class="si" viewBox="0 0 512 512" aria-hidden="true"><path d="M433.754 420.445c-11.526 1.393-44.86-52.741-44.86-52.741 0 31.345-16.136 72.247-51.051 101.786 16.842 5.192 54.843 19.167 45.803 34.421-7.316 12.343-125.51 7.881-159.632 4.037-34.122 3.844-152.316 8.306-159.632-4.037-9.045-15.25 28.918-29.214 45.783-34.415-34.92-29.539-51.059-70.445-51.059-101.792 0 0-33.334 54.134-44.859 52.741-5.37-.65-12.424-29.644 9.347-99.704 10.261-33.024 21.995-60.478 40.144-105.779C60.683 98.063 108.982.006 224 0c113.737.006 163.156 96.133 160.264 214.963 18.118 45.223 29.912 72.85 40.144 105.778 21.768 70.06 14.716 99.053 9.346 99.704z"/></svg>QQ群</a>
+    </div>
+  </section>
+
+  <!-- ===================== 全部项目 ===================== -->
+  <section class="section" id="projects">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <p class="kicker">Projects · 项目档案</p>
+          <h2>全部项目</h2>
+        </div>
+        <span class="note">2017 — 至今</span>
+      </div>
+
+      <div class="card-grid">
+
+        <a class="card fade" href="https://video.coolist.net/" target="_blank" rel="noopener">
+          <div class="card-top">
+            <span class="card-year">2026-10-06</span>
+            <span class="chip live"><i></i>运行中</span>
+          </div>
+          <h3 class="card-title"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="3"/><path d="M10 9v6l5-3-5-3z"/></svg>私有影院</h3>
+          <p class="card-desc">私人影视库，收藏与观看，只属于你的影院。</p>
+          <div class="card-foot">
+            <span class="card-domain">video.coolist.net</span>
+            <span class="card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </div>
+        </a>
+
+        <a class="card fade" href="https://movie.coolist.net/" target="_blank" rel="noopener">
+          <div class="card-top">
+            <span class="card-year">2026-10-06</span>
+            <span class="chip live"><i></i>运行中</span>
+          </div>
+          <h3 class="card-title"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3.5" width="8" height="8" rx="1.5"/><rect x="13" y="3.5" width="8" height="8" rx="1.5"/><rect x="3" y="13.5" width="8" height="8" rx="1.5"/><rect x="13" y="13.5" width="8" height="8" rx="1.5"/></svg>影视墙</h3>
+          <p class="card-desc">一面电影海报墙，浏览与发现下一部想看的电影。</p>
+          <div class="card-foot">
+            <span class="card-domain">movie.coolist.net</span>
+            <span class="card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </div>
+        </a>
+
+        <a class="card fade" href="https://blog.coolist.net" target="_blank" rel="noopener">
+          <div class="card-top">
+            <span class="card-year">2022-07-20</span>
+            <span class="chip live"><i></i>运行中</span>
+          </div>
+          <h3 class="card-title"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-3.6-3.6"/></svg>软件探索</h3>
+          <p class="card-desc">分享好用的软件和网站</p>
+          <div class="card-foot">
+            <span class="card-domain">blog.coolist.net</span>
+            <span class="card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </div>
+        </a>
+
+        <a class="card fade" href="https://zhuxiao.wiki" target="_blank" rel="noopener">
+          <div class="card-top">
+            <span class="card-year">2020-12-06</span>
+            <span class="chip transfer"><i></i>已转让</span>
+          </div>
+          <h3 class="card-title"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6.5h16M9.5 6.5V4.5h5v2M6.5 6.5l.8 13h9.4l.8-13"/><path d="M10 10.5v6M14 10.5v6"/></svg>注销指南</h3>
+          <p class="card-desc">收集各种网络账号的注销方法</p>
+          <div class="card-foot">
+            <span class="card-domain">zhuxiao.wiki</span>
+            <span class="card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </div>
+        </a>
+
+        <a class="card fade" href="https://www.fvnav.com" target="_blank" rel="noopener">
+          <div class="card-top">
+            <span class="card-year">2020-04-13</span>
+            <span class="chip live"><i></i>运行中</span>
+          </div>
+          <h3 class="card-title"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m15.8 8.2-2.2 5.4-5.4 2.2 2.2-5.4 5.4-2.2z"/></svg>初见之航</h3>
+          <p class="card-desc">每次点击都有新发现</p>
+          <div class="card-foot">
+            <span class="card-domain">fvnav.com</span>
+            <span class="card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </div>
+        </a>
+
+        <a class="card fade" href="https://www.kancloud.cn/appexplore/sci-fi/1509077" target="_blank" rel="noopener">
+          <div class="card-top">
+            <span class="card-year">2020-03-01</span>
+            <span class="chip off"><i></i>已关闭</span>
+          </div>
+          <h3 class="card-title"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8" transform="rotate(-18 12 12)"/></svg>科幻片指南</h3>
+          <p class="card-desc">收集优秀的科幻电影，供大家检索</p>
+          <div class="card-foot">
+            <span class="card-domain">kancloud.cn/appexplore/sci-fi/1509077</span>
+            <span class="card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </div>
+        </a>
+
+        <a class="card fade" href="https://cloud.coolist.net" target="_blank" rel="noopener">
+          <div class="card-top">
+            <span class="card-year">2020-01-09</span>
+            <span class="chip transfer"><i></i>已转让</span>
+          </div>
+          <h3 class="card-title"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 17.5a4 4 0 1 1 .8-7.9 5 5 0 0 1 9.6 1.3 3.4 3.4 0 0 1-.4 6.6"/><path d="M12 11.5v6M9.8 15.3 12 17.5l2.2-2.2"/></svg>软件资源库</h3>
+          <p class="card-desc">常用软件下载站</p>
+          <div class="card-foot">
+            <span class="card-domain">cloud.coolist.net</span>
+            <span class="card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </div>
+        </a>
+
+        <a class="card fade" href="https://www.yuque.com/apped/coolist" target="_blank" rel="noopener">
+          <div class="card-top">
+            <span class="card-year">2018-12-01</span>
+            <span class="chip live"><i></i>运行中</span>
+          </div>
+          <h3 class="card-title"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 2.5h6v3H9z"/><path d="m9 13 2 2 4-4.5"/></svg>酷软清单</h3>
+          <p class="card-desc">一个软件精选清单</p>
+          <div class="card-foot">
+            <span class="card-domain">yuque.com/apped/coolist</span>
+            <span class="card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </div>
+        </a>
+
+        <a class="card fade" href="https://appexplore.github.io/homepage-selectlist/" target="_blank" rel="noopener">
+          <div class="card-top">
+            <span class="card-year">2018-05-26</span>
+            <span class="chip live"><i></i>运行中</span>
+          </div>
+          <h3 class="card-title"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 10.5 8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-6h4v6"/></svg>选择主页</h3>
+          <p class="card-desc">帮你选一个适合自己的浏览器主页</p>
+          <div class="card-foot">
+            <span class="card-domain">appexplore.github.io/homepage-selectlist/</span>
+            <span class="card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </div>
+        </a>
+
+        <a class="card fade" href="https://www.jianavi.com" target="_blank" rel="noopener">
+          <div class="card-top">
+            <span class="card-year">2017-03-22</span>
+            <span class="chip transfer"><i></i>已转让</span>
+          </div>
+          <h3 class="card-title"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>简约导航</h3>
+          <p class="card-desc">一个简单美观可自定义的网址导航</p>
+          <div class="card-foot">
+            <span class="card-domain">jianavi.com</span>
+            <span class="card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </div>
+        </a></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===================== 页脚 ===================== -->
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot">
+      <span>© 2017–<span id="year">2026</span> COOLIST · 软件小编</span>
+      <span class="foot-side">
+        <span>分享好用的软件和网站，也分享生活~</span>
+        <a class="to-top" href="#top">返回顶部</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== 公众号二维码弹窗 ===================== -->
+<div class="modal" id="wxModal" hidden>
+  <div class="modal-mask" data-close></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-label="公众号二维码">
+    <button type="button" class="modal-close" data-close aria-label="关闭">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <p class="modal-title">关注公众号</p>
+    <img class="modal-img" src="qrcode.png" alt="公众号二维码">
+    <p class="modal-tip">微信扫码关注，获取最新分享</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  // 页脚年份
+  var y=document.getElementById('year');
+  if(y)y.textContent=new Date().getFullYear();
+
+  // 公众号二维码弹窗
+  var wxLink=document.getElementById('wechatLink');
+  var wxModal=document.getElementById('wxModal');
+  if(wxLink&&wxModal){
+    var closers=wxModal.querySelectorAll('[data-close]');
+    function openWx(e){
+      e.preventDefault();
+      wxModal.hidden=false;
+      var c=wxModal.querySelector('.modal-close');
+      if(c)c.focus();
+    }
+    function closeWx(){
+      wxModal.hidden=true;
+      if(wxLink)wxLink.focus();
+    }
+    wxLink.addEventListener('click',openWx);
+    closers.forEach(function(el){el.addEventListener('click',closeWx);});
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape'&&!wxModal.hidden)closeWx();
+    });
+  }
+
+  // 滚动揭示（区块整块浮现，卡片按序错落淡入）
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  var items=document.querySelectorAll('.reveal,.fade');
+  if(!('IntersectionObserver' in window)){
+    items.forEach(function(el){el.classList.add('in');});
+    return;
+  }
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        var el=entry.target;
+        if(el.classList.contains('fade')){
+          var idx=Array.prototype.indexOf.call(el.parentNode.children,el);
+          el.style.transitionDelay=(idx%4*70)+'ms';
+        }
+        el.classList.add('in');
+        io.unobserve(el);
+      }
+    });
+  },{threshold:.08,rootMargin:'0px 0px -30px 0px'});
+  items.forEach(function(el){io.observe(el);});
+})();
+</script>
+</body>
+</html>
